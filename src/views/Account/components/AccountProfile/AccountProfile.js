@@ -40,7 +40,7 @@ const AccountProfile = props => {
   const classes = useStyles();
 
   const user = {
-    name: 'Shen Zhi',
+    name: 'Young Kwon',
     city: 'Los Angeles',
     country: 'USA',
     timezone: 'GTM-7',
@@ -59,7 +59,7 @@ const AccountProfile = props => {
               gutterBottom
               variant="h2"
             >
-              John Doe
+              {user.name}
             </Typography>
             <Typography
               className={classes.locationText}
@@ -81,13 +81,6 @@ const AccountProfile = props => {
             src={user.avatar}
           />
         </div>
-        <div className={classes.progress}>
-          <Typography variant="body1">Profile Completeness: 70%</Typography>
-          <LinearProgress
-            value={70}
-            variant="determinate"
-          />
-        </div>
       </CardContent>
       <Divider />
       <CardActions>
@@ -96,9 +89,9 @@ const AccountProfile = props => {
           color="primary"
           variant="text"
         >
-          Upload picture
+          Select Icon
         </Button>
-        <Button variant="text">Remove picture</Button>
+        <Button variant="text">Remove icon</Button>
       </CardActions>
     </Card>
   );

@@ -8,6 +8,9 @@ export default [
     customer: {
       name: 'Ekaterina Tankova'
     },
+    seller: {
+      name: '420 Somewhere'
+    },
     createdAt: 1555016400000,
     status: 'pending'
   },
@@ -18,8 +21,11 @@ export default [
     customer: {
       name: 'Cao Yu'
     },
+    seller: {
+      name: '420 Somewhere'
+    },
     createdAt: 1555016400000,
-    status: 'delivered'
+    status: 'success'
   },
   {
     id: uuid(),
@@ -28,8 +34,11 @@ export default [
     customer: {
       name: 'Alexa Richardson'
     },
+    seller: {
+      name: 'Love Shack'
+    },
     createdAt: 1554930000000,
-    status: 'refunded'
+    status: 'success'
   },
   {
     id: uuid(),
@@ -38,8 +47,11 @@ export default [
     customer: {
       name: 'Anje Keizer'
     },
+    seller: {
+      name: '420 Pop'
+    },
     createdAt: 1554757200000,
-    status: 'pending'
+    status: 'failure'
   },
   {
     id: uuid(),
@@ -48,8 +60,11 @@ export default [
     customer: {
       name: 'Clarke Gillebert'
     },
+    seller: {
+      name: '420 Pop'
+    },
     createdAt: 1554670800000,
-    status: 'delivered'
+    status: 'success'
   },
   {
     id: uuid(),
@@ -58,7 +73,10 @@ export default [
     customer: {
       name: 'Adam Denisov'
     },
+    seller: {
+      name: '420 Somewhere'
+    },
     createdAt: 1554670800000,
-    status: 'delivered'
+    status: 'success'
   }
 ];

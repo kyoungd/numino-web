@@ -45,9 +45,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const statusColors = {
-  delivered: 'success',
+  success: 'success',
   pending: 'info',
-  refunded: 'danger'
+  failure: 'danger'
 };
 
 const LatestOrders = props => {
@@ -69,7 +69,7 @@ const LatestOrders = props => {
             size="small"
             variant="outlined"
           >
-            New entry
+            Export Data
           </Button>
         }
         title="Latest Orders"
@@ -83,6 +83,7 @@ const LatestOrders = props => {
                 <TableRow>
                   <TableCell>Order Ref</TableCell>
                   <TableCell>Customer</TableCell>
+                  <TableCell>Seller</TableCell>
                   <TableCell sortDirection="desc">
                     <Tooltip
                       enterDelay={300}
@@ -96,6 +97,7 @@ const LatestOrders = props => {
                       </TableSortLabel>
                     </Tooltip>
                   </TableCell>
+                  <TableCell>Amount</TableCell>
                   <TableCell>Status</TableCell>
                 </TableRow>
               </TableHead>
@@ -107,9 +109,11 @@ const LatestOrders = props => {
                   >
                     <TableCell>{order.ref}</TableCell>
                     <TableCell>{order.customer.name}</TableCell>
+                    <TableCell>{order.seller.name}</TableCell>
                     <TableCell>
                       {moment(order.createdAt).format('DD/MM/YYYY')}
                     </TableCell>
+                    <TableCell>${order.amount}</TableCell>
                     <TableCell>
                       <div className={classes.statusContainer}>
                         <StatusBullet

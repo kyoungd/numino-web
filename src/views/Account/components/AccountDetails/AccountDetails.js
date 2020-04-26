@@ -23,10 +23,14 @@ const AccountDetails = props => {
   const classes = useStyles();
 
   const [values, setValues] = useState({
-    firstName: 'Shen',
-    lastName: 'Zhi',
-    email: 'shen.zhi@devias.io',
-    phone: '',
+    firstName: 'Young',
+    lastName: 'Kwon',
+    email: 'kyoungd@hotmail.com',
+    phone: '818-679-3565',
+    bank: 'Credit Union Of Los Angeles',
+    accountNumber: 'xxxx-xxxx-xxxx-2470',
+    routingNumber: '123403040',
+    passKey: '',
     state: 'Alabama',
     country: 'USA'
   });
@@ -40,19 +44,25 @@ const AccountDetails = props => {
 
   const states = [
     {
-      value: 'alabama',
-      label: 'Alabama'
-    },
-    {
-      value: 'new-york',
-      label: 'New York'
-    },
-    {
-      value: 'san-francisco',
-      label: 'San Francisco'
+      value: 'California',
+      label: 'California'
     }
   ];
 
+  const banks = [
+    {
+      value: 'Credit Union Of Los Angeles',
+      label: 'Credit Union Of Los Angeles'
+    },
+    {
+      value: 'Woodland Hills Bank',
+      label: 'Woodland Hills Bank'
+    },
+    {
+      value: 'Ontario Bank',
+      label: 'Ontario Bank'
+    }
+  ]
   return (
     <Card
       {...rest}
@@ -155,6 +165,83 @@ const AccountDetails = props => {
                 value={values.state}
                 variant="outlined"
               >
+                {banks.map(option => (
+                  <option
+                    key={option.value}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                label="Account Number"
+                margin="dense"
+                name="account number"
+                onChange={handleChange}
+                required
+                type="number"
+                value={values.account}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                label="Routing Number"
+                margin="dense"
+                name="routing"
+                onChange={handleChange}
+                required
+                type="number"
+                value={values.routing}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                label="PassKey"
+                margin="dense"
+                name="passkey"
+                onChange={handleChange}
+                value={values.passkey}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                label="Select State"
+                margin="dense"
+                name="state"
+                onChange={handleChange}
+                required
+                select
+                // eslint-disable-next-line react/jsx-sort-props
+                SelectProps={{ native: true }}
+                value={values.state}
+                variant="outlined"
+              >
                 {states.map(option => (
                   <option
                     key={option.value}
@@ -175,7 +262,6 @@ const AccountDetails = props => {
                 label="Country"
                 margin="dense"
                 name="country"
-                onChange={handleChange}
                 required
                 value={values.country}
                 variant="outlined"
