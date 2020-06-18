@@ -1,20 +1,38 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 const RouteWithLayout = props => {
-  const { layout: Layout, component: Component, ...rest } = props;
+  const {
+    layout: Layout,
+    component: Component,
+    token,
+    isProtected,
+    loginRelated,
+    redirect,
+    ...rest
+  } = props;
 
-  return (
-    <Route
-      {...rest}
-      render={matchProps => (
-        <Layout>
-          <Component {...matchProps} />
-        </Layout>
-      )}
-    />
-  );
+  if (
+    (isProtected && loginRelated && token.length === 0) ||
+    (isProtected && !loginRelated && token.length > 0) ||
+    !isProtected
+  ) {
+    return (
+      <Route
+        {...rest}
+        render={matchProps => (
+          <Layout>
+            <Component {...matchProps} />
+          </Layout>
+        )}
+      />
+    );
+  } else {
+    return <Redirect to={redirect} />;
+  }
 };
 
 RouteWithLayout.propTypes = {
@@ -23,4 +41,8 @@ RouteWithLayout.propTypes = {
   path: PropTypes.string
 };
 
-export default RouteWithLayout;
+const mapStateToProps = state => ({
+  token: state.user.token
+});
+
+export default connect(mapStateToProps, {})(RouteWithLayout);
