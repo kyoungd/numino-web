@@ -178,9 +178,9 @@ const ResetPassword = props => {
         <Grid className={classes.content} item lg={6} xs={12}>
           <div className={classes.content}>
             <div className={classes.contentHeader}>
-              <IconButton onClick={handleBack}>
+              {/* <IconButton onClick={handleBack}>
                 <ArrowBackIcon />
-              </IconButton>
+              </IconButton> */}
             </div>
             <div className={classes.contentBody}>
               <form className={classes.form} onSubmit={handleSignIn}>
@@ -188,7 +188,7 @@ const ResetPassword = props => {
                   Enter New Password
                 </Typography>
                 <Typography color="textSecondary" gutterBottom>
-                  Your will be changed to new password
+                  Your password will be changed to new password
                 </Typography>
 
                 <TextField

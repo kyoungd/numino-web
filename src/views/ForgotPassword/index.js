@@ -12,6 +12,7 @@ function Alert(props) {
 class forgotPasswordWrapper extends Component {
   state = {
     error: '',
+    type: '',
     open: false
   };
   onForgot = ({ email }) => {
@@ -21,12 +22,21 @@ class forgotPasswordWrapper extends Component {
       })
       .then(response => {
         // Handle success.
-        console.log('Your user received an email');
+        this.setState({
+          error: 'Reset password link sent!',
+          type: 'success',
+          open: true
+        });
+        // console.log('Your user received an email');
+        setTimeout(() => {
+          this.props.history.push('/sign-in');
+        }, 3000);
       })
       .catch(error => {
         // Handle error.
         this.setState({
           error: error.response.data.message[0].messages[0].message,
+          type: 'error',
           open: true
         });
         // console.log('An error occurred:', error.response);
@@ -48,9 +58,9 @@ class forgotPasswordWrapper extends Component {
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           open={this.state.open}
-          autoHideDuration={6000}
+          autoHideDuration={3000}
           onClose={this.handleClose}>
-          <Alert severity="error">{this.state.error}</Alert>
+          <Alert severity={this.state.type}>{this.state.error}</Alert>
         </Snackbar>
         <ForgotPassword onForgot={this.onForgot} />
       </div>

@@ -25,6 +25,7 @@ class resetPasswordWrapper extends Component {
       })
       .then(response => {
         // Handle success.
+        this.props.history.push('/sign-in');
         console.log("Your user's password has been changed.");
       })
       .catch(error => {
