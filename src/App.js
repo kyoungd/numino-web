@@ -11,6 +11,8 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import './assets/scss/index.scss';
 import validators from './common/validators';
 import Routes from './Routes';
+import { Provider } from 'react-redux';
+import store from './store';
 
 const browserHistory = createBrowserHistory();
 
@@ -26,11 +28,13 @@ validate.validators = {
 export default class App extends Component {
   render() {
     return (
-      <ThemeProvider theme={theme}>
-        <Router history={browserHistory}>
-          <Routes />
-        </Router>
-      </ThemeProvider>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <Router history={browserHistory}>
+            <Routes />
+          </Router>
+        </ThemeProvider>
+      </Provider>
     );
   }
 }

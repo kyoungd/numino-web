@@ -14,17 +14,15 @@ import {
   Settings as SettingsView,
   SignUp as SignUpView,
   SignIn as SignInView,
-  NotFound as NotFoundView
+  NotFound as NotFoundView,
+  ForgotPassword as ForgotPasswordView,
+  ResetPassword as ResetPasswordView
 } from './views';
 
 const Routes = () => {
   return (
     <Switch>
-      <Redirect
-        exact
-        from="/"
-        to="/dashboard"
-      />
+      <Redirect exact from="/" to="/dashboard" />
       <RouteWithLayout
         component={DashboardView}
         exact
@@ -78,6 +76,18 @@ const Routes = () => {
         exact
         layout={MinimalLayout}
         path="/sign-in"
+      />
+      <RouteWithLayout
+        component={ForgotPasswordView}
+        exact
+        layout={MinimalLayout}
+        path="/forgot-password"
+      />
+      <RouteWithLayout
+        component={ResetPasswordView}
+        exact
+        layout={MinimalLayout}
+        path="/admin"
       />
       <RouteWithLayout
         component={NotFoundView}

@@ -16,13 +16,6 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { Facebook as FacebookIcon, Google as GoogleIcon } from 'icons';
 
 const schema = {
-  email: {
-    presence: { allowEmpty: false, message: 'is required' },
-    email: true,
-    length: {
-      maximum: 64
-    }
-  },
   password: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
@@ -125,8 +118,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SignIn = props => {
-  const { history, onSignin } = props;
+const ResetPassword = props => {
+  const { history, onReset } = props;
 
   const classes = useStyles();
 
@@ -172,7 +165,7 @@ const SignIn = props => {
 
   const handleSignIn = event => {
     event.preventDefault();
-    onSignin(formState.values);
+    onReset(formState.values);
     // history.push('/');
   };
 
@@ -181,26 +174,8 @@ const SignIn = props => {
 
   return (
     <div className={classes.root}>
-      <Grid className={classes.grid} container>
-        <Grid className={classes.quoteContainer} item lg={5}>
-          <div className={classes.quote}>
-            <div className={classes.quoteInner}>
-              <Typography className={classes.quoteText} variant="h1">
-                Join us today for 420 banking service. Welcome to the 21th
-                century.
-              </Typography>
-              <div className={classes.person}>
-                <Typography className={classes.name} variant="body1">
-                  Tim Dupler
-                </Typography>
-                <Typography className={classes.bio} variant="body2">
-                  VP at Numino
-                </Typography>
-              </div>
-            </div>
-          </div>
-        </Grid>
-        <Grid className={classes.content} item lg={7} xs={12}>
+      <Grid className={classes.grid} container justify="center">
+        <Grid className={classes.content} item lg={6} xs={12}>
           <div className={classes.content}>
             <div className={classes.contentHeader}>
               <IconButton onClick={handleBack}>
@@ -210,53 +185,12 @@ const SignIn = props => {
             <div className={classes.contentBody}>
               <form className={classes.form} onSubmit={handleSignIn}>
                 <Typography className={classes.title} variant="h2">
-                  Sign in
+                  Enter New Password
                 </Typography>
                 <Typography color="textSecondary" gutterBottom>
-                  Sign in with social media
+                  Your will be changed to new password
                 </Typography>
-                <Grid className={classes.socialButtons} container spacing={2}>
-                  <Grid item>
-                    <Button
-                      color="primary"
-                      onClick={handleSignIn}
-                      size="large"
-                      variant="contained">
-                      <FacebookIcon className={classes.socialIcon} />
-                      Login with Facebook
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={handleSignIn}
-                      size="large"
-                      variant="contained">
-                      <GoogleIcon className={classes.socialIcon} />
-                      Login with Google
-                    </Button>
-                  </Grid>
-                </Grid>
-                <Typography
-                  align="center"
-                  className={classes.sugestion}
-                  color="textSecondary"
-                  variant="body1">
-                  or login with email address
-                </Typography>
-                <TextField
-                  className={classes.textField}
-                  error={hasError('email')}
-                  fullWidth
-                  helperText={
-                    hasError('email') ? formState.errors.email[0] : null
-                  }
-                  label="Email address"
-                  name="email"
-                  onChange={handleChange}
-                  type="text"
-                  value={formState.values.email || ''}
-                  variant="outlined"
-                />
+
                 <TextField
                   className={classes.textField}
                   error={hasError('password')}
@@ -271,6 +205,7 @@ const SignIn = props => {
                   value={formState.values.password || ''}
                   variant="outlined"
                 />
+
                 <Button
                   className={classes.signInButton}
                   color="primary"
@@ -279,29 +214,8 @@ const SignIn = props => {
                   size="large"
                   type="submit"
                   variant="contained">
-                  Sign in now
+                  Update Password
                 </Button>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}>
-                  <Typography color="textSecondary" variant="body1">
-                    Don't have an account?{' '}
-                    <Link component={RouterLink} to="/sign-up" variant="h6">
-                      Sign up
-                    </Link>
-                  </Typography>
-                  <Typography color="textSecondary" variant="body1">
-                    <Link
-                      component={RouterLink}
-                      to="/forgot-password"
-                      variant="h6">
-                      Forgot Password?
-                    </Link>
-                  </Typography>
-                </div>
               </form>
             </div>
           </div>
@@ -311,8 +225,8 @@ const SignIn = props => {
   );
 };
 
-SignIn.propTypes = {
+ResetPassword.propTypes = {
   history: PropTypes.object
 };
 
-export default withRouter(SignIn);
+export default withRouter(ResetPassword);

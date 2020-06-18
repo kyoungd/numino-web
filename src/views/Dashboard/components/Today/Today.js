@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import { numberWithCommas } from '../../../../helpers';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,34 +32,24 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Today = props => {
-  const { className, ...rest } = props;
+  const { className, data, ...rest } = props;
 
   const classes = useStyles();
 
   return (
-    <Card
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
+    <Card {...rest} className={clsx(classes.root, className)}>
       <CardContent>
-        <Grid
-          container
-          justify="space-between"
-        >
+        <Grid container justify="space-between">
           <Grid item>
             <Typography
               className={classes.title}
               color="inherit"
               gutterBottom
-              variant="body2"
-            >
+              variant="body2">
               TODAY
             </Typography>
-            <Typography
-              color="inherit"
-              variant="h3"
-            >
-              $920
+            <Typography color="inherit" variant="h3">
+              ${numberWithCommas(data.revenueToday)}
             </Typography>
           </Grid>
           <Grid item>

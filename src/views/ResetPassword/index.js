@@ -1,37 +1,31 @@
-// export { default } from './SignIn';
+// export { default } from './ForgotPassword';
 import React, { Component } from 'react';
-import SignIn from './SignIn';
+import ResetPassword from './ResetPassword';
 import axios from 'axios';
-import { setUser } from '../../actions/user';
 import { serverUrl } from '../../helpers';
-import { connect } from 'react-redux';
+import queryString from 'query-string';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-class SigninWrapper extends Component {
+class resetPasswordWrapper extends Component {
   state = {
     error: '',
     open: false
   };
-  onSignin = ({ email, password }) => {
+  onReset = ({ password }) => {
+    let params = queryString.parse(this.props.location.search);
     axios
-      .post(serverUrl + 'auth/local', {
-        identifier: email,
-        password
+      .post(serverUrl + 'auth/reset-password', {
+        code: params.code,
+        password: password,
+        passwordConfirmation: password
       })
       .then(response => {
         // Handle success.
-        // console.log('Well done!');
-        // console.log('User profile', response.data.user);
-        // console.log('User token', response.data.jwt);
-        this.props.setUser({
-          email: response.data.user.email,
-          token: response.data.jwt
-        });
-        this.props.history.push('/');
+        console.log("Your user's password has been changed.");
       })
       .catch(error => {
         // Handle error.
@@ -62,10 +56,10 @@ class SigninWrapper extends Component {
           onClose={this.handleClose}>
           <Alert severity="error">{this.state.error}</Alert>
         </Snackbar>
-        <SignIn onSignin={this.onSignin} />
+        <ResetPassword onReset={this.onReset} />
       </div>
     );
   }
 }
 
-export default connect(null, { setUser })(SigninWrapper);
+export default resetPasswordWrapper;

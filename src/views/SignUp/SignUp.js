@@ -16,42 +16,42 @@ import {
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const schema = {
-  firstName: {
+  username: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
       maximum: 32
     }
   },
-  lastName: {
-    presence: { allowEmpty: false, message: 'is required' },
-    length: {
-      maximum: 32
-    }
-  },
-  bank: {
-    presence: { allowEmpty: false, message: 'is required' },
-    length: {
-      maximum: 32
-    }
-  },
-  accountNumber: {
-    presence: { allowEmpty: false, message: 'is required' },
-    length: {
-      maximum: 32
-    }
-  },
-  routingNumber: {
-    presence: { allowEmpty: false, message: 'is required' },
-    length: {
-      maximum: 32
-    }
-  },
-  passKey: {
-    presence: { allowEmpty: false, message: 'is required' },
-    length: {
-      maximum: 32
-    }
-  },
+  // lastName: {
+  //   presence: { allowEmpty: false, message: 'is required' },
+  //   length: {
+  //     maximum: 32
+  //   }
+  // },
+  // bank: {
+  //   presence: { allowEmpty: false, message: 'is required' },
+  //   length: {
+  //     maximum: 32
+  //   }
+  // },
+  // accountNumber: {
+  //   presence: { allowEmpty: false, message: 'is required' },
+  //   length: {
+  //     maximum: 32
+  //   }
+  // },
+  // routingNumber: {
+  //   presence: { allowEmpty: false, message: 'is required' },
+  //   length: {
+  //     maximum: 32
+  //   }
+  // },
+  // passKey: {
+  //   presence: { allowEmpty: false, message: 'is required' },
+  //   length: {
+  //     maximum: 32
+  //   }
+  // },
   email: {
     presence: { allowEmpty: false, message: 'is required' },
     email: true,
@@ -165,7 +165,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SignUp = props => {
-  const { history } = props;
+  const { history, onSignup } = props;
 
   const classes = useStyles();
 
@@ -178,7 +178,6 @@ const SignUp = props => {
 
   useEffect(() => {
     const errors = validate(formState.values, schema);
-
     setFormState(formState => ({
       ...formState,
       isValid: errors ? false : true,
@@ -211,7 +210,14 @@ const SignUp = props => {
 
   const handleSignUp = event => {
     event.preventDefault();
-    history.push('/');
+    // console.log(formState.values);
+
+    onSignup({
+      username: formState.values.username,
+      email: formState.values.email,
+      password: formState.values.password
+    });
+    // history.push('/');
   };
 
   const hasError = field =>
@@ -219,46 +225,26 @@ const SignUp = props => {
 
   return (
     <div className={classes.root}>
-      <Grid
-        className={classes.grid}
-        container
-      >
-        <Grid
-          className={classes.quoteContainer}
-          item
-          lg={5}
-        >
+      <Grid className={classes.grid} container>
+        <Grid className={classes.quoteContainer} item lg={5}>
           <div className={classes.quote}>
             <div className={classes.quoteInner}>
-              <Typography
-                className={classes.quoteText}
-                variant="h1"
-              >
-                Finally, ETF (Electronic Transfer Fund) and banking service comes to 420 industry. 
+              <Typography className={classes.quoteText} variant="h1">
+                Finally, ETF (Electronic Transfer Fund) and banking service
+                comes to 420 industry.
               </Typography>
               <div className={classes.person}>
-                <Typography
-                  className={classes.name}
-                  variant="body1"
-                >
+                <Typography className={classes.name} variant="body1">
                   Tim Dupler
                 </Typography>
-                <Typography
-                  className={classes.bio}
-                  variant="body2"
-                >
+                <Typography className={classes.bio} variant="body2">
                   VP at Numino
                 </Typography>
               </div>
             </div>
           </div>
         </Grid>
-        <Grid
-          className={classes.content}
-          item
-          lg={7}
-          xs={12}
-        >
+        <Grid className={classes.content} item lg={7} xs={12}>
           <div className={classes.content}>
             <div className={classes.contentHeader}>
               <IconButton onClick={handleBack}>
@@ -266,37 +252,28 @@ const SignUp = props => {
               </IconButton>
             </div>
             <div className={classes.contentBody}>
-              <form
-                className={classes.form}
-                onSubmit={handleSignUp}
-              >
-                <Typography
-                  className={classes.title}
-                  variant="h2"
-                >
+              <form className={classes.form} onSubmit={handleSignUp}>
+                <Typography className={classes.title} variant="h2">
                   Create new account
                 </Typography>
-                <Typography
-                  color="textSecondary"
-                  gutterBottom
-                >
+                <Typography color="textSecondary" gutterBottom>
                   Use your email to create new account
                 </Typography>
                 <TextField
                   className={classes.textField}
-                  error={hasError('firstName')}
+                  error={hasError('username')}
                   fullWidth
                   helperText={
-                    hasError('firstName') ? formState.errors.firstName[0] : null
+                    hasError('username') ? formState.errors.username[0] : null
                   }
-                  label="First name"
-                  name="firstName"
+                  label="Username"
+                  name="username"
                   onChange={handleChange}
                   type="text"
-                  value={formState.values.firstName || ''}
+                  value={formState.values.username || ''}
                   variant="outlined"
                 />
-                <TextField
+                {/* <TextField
                   className={classes.textField}
                   error={hasError('lastName')}
                   fullWidth
@@ -309,7 +286,7 @@ const SignUp = props => {
                   type="text"
                   value={formState.values.lastName || ''}
                   variant="outlined"
-                />
+                /> */}
                 <TextField
                   className={classes.textField}
                   error={hasError('email')}
@@ -349,16 +326,14 @@ const SignUp = props => {
                   <Typography
                     className={classes.policyText}
                     color="textSecondary"
-                    variant="body1"
-                  >
+                    variant="body1">
                     I have read the{' '}
                     <Link
                       color="primary"
                       component={RouterLink}
                       to="#"
                       underline="always"
-                      variant="h6"
-                    >
+                      variant="h6">
                       Terms and Conditions
                     </Link>
                   </Typography>
@@ -375,20 +350,12 @@ const SignUp = props => {
                   fullWidth
                   size="large"
                   type="submit"
-                  variant="contained"
-                >
+                  variant="contained">
                   Sign up now
                 </Button>
-                <Typography
-                  color="textSecondary"
-                  variant="body1"
-                >
+                <Typography color="textSecondary" variant="body1">
                   Have an account?{' '}
-                  <Link
-                    component={RouterLink}
-                    to="/sign-in"
-                    variant="h6"
-                  >
+                  <Link component={RouterLink} to="/sign-in" variant="h6">
                     Sign in
                   </Link>
                 </Typography>

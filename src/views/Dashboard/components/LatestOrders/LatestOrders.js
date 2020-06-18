@@ -17,11 +17,12 @@ import {
   TableHead,
   TableRow,
   Tooltip,
-  TableSortLabel
+  TableSortLabel,
+  TablePagination
 } from '@material-ui/core';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-
-import mockData from './data';
+import axios from 'axios';
+import { serverUrl } from '../../../../helpers';
 import { StatusBullet } from 'components';
 
 const useStyles = makeStyles(theme => ({
@@ -52,26 +53,24 @@ const statusColors = {
 
 const LatestOrders = props => {
   const { className, ...rest } = props;
-
+  const [orders, setOrders] = React.useState([]);
   const classes = useStyles();
 
-  const [orders] = useState(mockData);
+  React.useEffect(() => {
+    axios
+      .get(serverUrl + 'data-latest-orders')
+      .then(res => setOrders([...res.data]))
+      .catch(err => console.log('Something went wrong'));
+  }, []);
 
   return (
-    <Card
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
+    <Card {...rest} className={clsx(classes.root, className)}>
       <CardHeader
-        action={
-          <Button
-            color="primary"
-            size="small"
-            variant="outlined"
-          >
-            Export Data
-          </Button>
-        }
+        // action={
+        //   <Button color="primary" size="small" variant="outlined">
+        //     Export Data
+        //   </Button>
+        // }
         title="Latest Orders"
       />
       <Divider />
@@ -84,34 +83,19 @@ const LatestOrders = props => {
                   <TableCell>Order Ref</TableCell>
                   <TableCell>Customer</TableCell>
                   <TableCell>Seller</TableCell>
-                  <TableCell sortDirection="desc">
-                    <Tooltip
-                      enterDelay={300}
-                      title="Sort"
-                    >
-                      <TableSortLabel
-                        active
-                        direction="desc"
-                      >
-                        Date
-                      </TableSortLabel>
-                    </Tooltip>
-                  </TableCell>
+                  <TableCell>Date</TableCell>
                   <TableCell>Amount</TableCell>
                   <TableCell>Status</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {orders.map(order => (
-                  <TableRow
-                    hover
-                    key={order.id}
-                  >
-                    <TableCell>{order.ref}</TableCell>
-                    <TableCell>{order.customer.name}</TableCell>
-                    <TableCell>{order.seller.name}</TableCell>
+                  <TableRow hover key={order.id}>
+                    <TableCell>{order.id}</TableCell>
+                    <TableCell>{order.customer}</TableCell>
+                    <TableCell>{order.seller}</TableCell>
                     <TableCell>
-                      {moment(order.createdAt).format('DD/MM/YYYY')}
+                      {moment(order.created_at).format('DD/MM/YYYY')}
                     </TableCell>
                     <TableCell>${order.amount}</TableCell>
                     <TableCell>
@@ -133,11 +117,7 @@ const LatestOrders = props => {
       </CardContent>
       <Divider />
       <CardActions className={classes.actions}>
-        <Button
-          color="primary"
-          size="small"
-          variant="text"
-        >
+        <Button color="primary" size="small" variant="text">
           View all <ArrowRightIcon />
         </Button>
       </CardActions>
