@@ -15,4 +15,7 @@ https://www.youtube.com/watch?v=KcxPhJOM3uk
 
 
 # demo production
-https://numino-dashboard-web.herokuapp.com
+https://numino-dashboard.herokuapp.com
+
+# set heroku depository
+heroku git:remote -a numino-dashboard
