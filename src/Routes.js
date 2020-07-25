@@ -11,6 +11,7 @@ import {
   Typography as TypographyView,
   Icons as IconsView,
   Account as AccountView,
+  Export as ExportView,
   Settings as SettingsView,
   SignUp as SignUpView,
   SignIn as SignInView,
@@ -68,6 +69,14 @@ const Routes = () => {
         exact
         layout={MainLayout}
         path="/account"
+        isProtected
+        redirect="/sign-in"
+      />
+      <RouteWithLayout
+        component={ExportView}
+        exact
+        layout={MainLayout}
+        path="/export"
         isProtected
         redirect="/sign-in"
       />

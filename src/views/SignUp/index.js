@@ -18,6 +18,7 @@ class SignupWrapper extends Component {
     open: false
   };
   onSignup = ({ username, email, password }) => {
+    console.log(serverUrl);
     axios
       .post(serverUrl + 'auth/local/register', {
         username,

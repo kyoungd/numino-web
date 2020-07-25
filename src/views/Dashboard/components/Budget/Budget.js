@@ -58,7 +58,7 @@ const Budget = props => {
               Monthly Revenue
             </Typography>
             <Typography variant="h3">
-              ${numberWithCommas(data.renvenueMonthly)}
+              {console.log(data)}${numberWithCommas(data.revenueMonthly)}
             </Typography>
           </Grid>
           <Grid item>

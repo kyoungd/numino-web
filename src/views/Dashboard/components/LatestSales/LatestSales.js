@@ -34,13 +34,16 @@ const useStyles = makeStyles(() => ({
 
 const LatestSales = props => {
   const { className, ...rest } = props;
-  const [data, setData] = React.useState([]);
+  const [data, setData] = React.useState({
+    daily: [],
+    weekly: [],
+    monthly: []
+  });
   const [chartData, setChartData] = React.useState([]);
   const [days, setDays] = React.useState('daily');
   const classes = useStyles();
 
   const mapToChart = () => {
-    let array = [...data];
     let labels = [];
     let datasets = [
       {
@@ -49,118 +52,25 @@ const LatestSales = props => {
         data: []
       }
     ];
+
+    let array = [...data[days]];
+
     if (days === 'daily') {
-      array.reverse();
-      array = array.splice(0, 7);
-      array.reverse();
       array.map((element, index) => {
         labels.push(moment(element.salesDate).format('D MMM'));
-        datasets[0].data.push(element.revenue);
+        datasets[0].data.push(element.amount);
       });
     } else if (days === 'weekly') {
-      array.reverse();
-
-      var lastStart = moment()
-        .subtract(0, 'weeks')
-        .startOf('week')
-        .format('YYYY-MM-DD');
-      var cutter;
-
-      for (var j = 0; j < 7; j++) {
-        if (lastStart === array[j].salesDate) {
-          cutter = j;
-        }
-      }
-      var firstWeek = array.splice(0, cutter + 1);
-      var dataSet = new Array();
-      var temp = 0;
-      firstWeek.map((element, index) => {
-        temp += element.revenue;
+      array.map((element, index) => {
+        labels.push(moment(element.salesDate).format('D MMM'));
+        datasets[0].data.push(element.amount);
       });
-      dataSet.push(temp);
-      temp = 0;
-      for (var x = 0; x < 6; x++) {
-        for (var y = 0; y < 7; y++) {
-          temp += array[x + y].revenue;
-        }
-        dataSet.push(temp);
-        temp = 0;
-      }
-
-      for (var i = 6; i > -1; i--) {
-        var y =
-          i == 0
-            ? 'Today'
-            : moment()
-                .subtract(i, 'weeks')
-                .endOf('week')
-                .format('ddd D, MM');
-        labels.push(
-          moment()
-            .subtract(i, 'weeks')
-            .startOf('week')
-            .format('ddd D, MM') +
-            ' - ' +
-            y
-        );
-        datasets[0].data.push(dataSet[i]);
-      }
-      // labels.push(
-      //   moment()
-      //     .subtract(index, 'weeks')
-      //     .startOf('week')
-      //     .format('ddd D, MM') +
-      //     ' - ' +
-      //     moment()
-      //       .subtract(index, 'weeks')
-      //       .endOf('week')
-      //       .format('ddd D, MM')
-      // );
     } else if (days === 'monthly') {
-      array.reverse();
-      // array = array.splice(0, 7);
-      var temp = array[0].salesDate.split('-')[1];
-      var temp2 = 0;
-      var temp3 = 0;
-      // console.log(temp);
-      var dataSet = new Array();
-
-      for (var i = 0; i < array.length; i++) {
-        if (temp == array[i].salesDate.split('-')[1]) {
-          temp2 += array[i].revenue;
-          if (i == array.length - 1) {
-            dataSet.push(temp2);
-          }
-        } else {
-          console.log(temp);
-          dataSet.push(temp2);
-          temp2 = array[i].revenue;
-          temp = array[i].salesDate.split('-')[1];
-          temp3++;
-          if (temp3 == 7) {
-            break;
-          }
-        }
-      }
-      console.log(dataSet);
-      for (var i = 6; i > -1; i--) {
-        labels.push(
-          moment()
-            .subtract(i, 'month')
-            .format('MMMM')
-        );
-        datasets[0].data.push(dataSet[i] ? dataSet[i] : 0);
-      }
-      // array.map((element, index) => {
-
-      // });
-      // labels.push(
-      //   moment()
-      //     .subtract(index, 'month')
-      //     .format('MMMM')
-      // );
+      array.map((element, index) => {
+        labels.push(moment(element.salesDate).format('D MMM'));
+        datasets[0].data.push(element.amount);
+      });
     }
-
     setChartData({
       labels,
       datasets
@@ -182,8 +92,11 @@ const LatestSales = props => {
 
   React.useEffect(() => {
     axios
-      .get(serverUrl + 'data-latest-sales')
-      .then(res => setData([...res.data]))
+      .get(serverUrl + 'purchase-summaries/data-latest-sales')
+      .then(res => {
+        console.log(res.data);
+        setData({ ...res.data });
+      })
       .catch(err => console.log(err));
   }, []);
 

@@ -16,6 +16,7 @@ class SigninWrapper extends Component {
     error: '',
     open: false
   };
+
   onSignin = ({ email, password }) => {
     axios
       .post(serverUrl + 'auth/local', {
@@ -35,8 +36,10 @@ class SigninWrapper extends Component {
       })
       .catch(error => {
         // Handle error.
+        console.log(error.response);
         this.setState({
-          error: error.response.data.message[0].messages[0].message,
+          error: 'Something went wrong',
+          // error: error.response.data.message[0].messages[0].message,
           open: true
         });
         // console.log('An error occurred:', error.response);

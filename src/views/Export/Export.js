@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 
-import { AccountProfile, AccountDetails } from './components';
+import { ExportForm } from './components';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -15,12 +15,9 @@ const Account = () => {
 
   return (
     <div className={classes.root}>
-      <Grid container spacing={4}>
+      <Grid container spacing={4} justify="center">
         <Grid item lg={6} md={6} xl={6} xs={12}>
-          <AccountProfile />
-        </Grid>
-        <Grid item lg={6} md={6} xl={6} xs={12}>
-          <AccountDetails />
+          <ExportForm />
         </Grid>
       </Grid>
     </div>

@@ -24,20 +24,20 @@ const useStyles = makeStyles(theme => ({
 const Dashboard = () => {
   const classes = useStyles();
   const [data, setData] = React.useState({
-    renvenueMonthly: 57247,
-    revenueMonthlyChange: 12,
-    totalUserMonthly: 3270,
-    totalUserMonthlyChange: 7,
-    revenueWeekly: 14211,
-    revenueWeeklyChange: 2,
-    revenueToday: 3247
+    revenueMonthly: 0,
+    revenueMonthlyChange: 0,
+    totalUserMonthly: 0,
+    totalUserMonthlyChange: 0,
+    revenueWeekly: 0,
+    revenueWeeklyChange: 0,
+    revenueToday: 0
   });
 
   React.useEffect(() => {
     axios
-      .get(serverUrl + 'data-thumbnails')
-      .then(res => setData({ ...res.data[0] }))
-      .catch(err => console.log(err.response.message));
+      .get(serverUrl + 'purchase-summaries/data-thumbnails ')
+      .then(res => setData({ ...res.data }))
+      .catch(err => console.log(err.response));
   }, []);
 
   return (

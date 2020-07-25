@@ -57,9 +57,20 @@ const LatestOrders = props => {
   const classes = useStyles();
 
   React.useEffect(() => {
+    let date = new Date().setMonth(new Date().getMonth() - 1);
+    // new Date(date).get
     axios
-      .get(serverUrl + 'data-latest-orders')
-      .then(res => setOrders([...res.data]))
+      .get(serverUrl + 'purchase-histories', {
+        params: {
+          salesDate_gte: '2020-06-25',
+          _sort: 'salesDate',
+          _limit: 10
+        }
+      })
+      .then(res => {
+        console.log(res.data);
+        setOrders([...res.data]);
+      })
       .catch(err => console.log('Something went wrong'));
   }, []);
 
@@ -92,12 +103,12 @@ const LatestOrders = props => {
                 {orders.map(order => (
                   <TableRow hover key={order.id}>
                     <TableCell>{order.id}</TableCell>
-                    <TableCell>{order.customer}</TableCell>
-                    <TableCell>{order.seller}</TableCell>
+                    <TableCell>{order.buyerName}</TableCell>
+                    <TableCell>{order.sellerName}</TableCell>
                     <TableCell>
-                      {moment(order.created_at).format('DD/MM/YYYY')}
+                      {moment(order.createdA).format('DD/MM/YYYY')}
                     </TableCell>
-                    <TableCell>${order.amount}</TableCell>
+                    <TableCell>${order.orderAmount}</TableCell>
                     <TableCell>
                       <div className={classes.statusContainer}>
                         <StatusBullet

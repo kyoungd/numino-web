@@ -6,14 +6,20 @@ const initialState = {
   token: localStorage.getItem('token') ? localStorage.getItem('token') : ''
 };
 
-// axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+if (localStorage.getItem('token')) {
+  axios.defaults.headers.common[
+    'authorization'
+  ] = `Bearer ${localStorage.getItem('token')}`;
+}
 
 export default function(state = initialState, action) {
   switch (action.type) {
     case AUTH_SUCCESS:
       localStorage.setItem('email', action.payload.email);
       localStorage.setItem('token', action.payload.token);
-      // axios.defaults.headers.common['authorization'] = action.payload.token;
+      axios.defaults.headers.common[
+        'authorization'
+      ] = `Bearer ${action.payload.token}`;
       return {
         ...state,
         ...action.payload
@@ -21,7 +27,7 @@ export default function(state = initialState, action) {
     case LOGOUT:
       localStorage.removeItem('email');
       localStorage.removeItem('token');
-      // axios.defaults.headers.common['authorization'] = '';
+      axios.defaults.headers.common['authorization'] = '';
 
       return {
         ...state,

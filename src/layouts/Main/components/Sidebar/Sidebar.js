@@ -11,6 +11,7 @@ import ImageIcon from '@material-ui/icons/Image';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import SettingsIcon from '@material-ui/icons/Settings';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
+import ImportExport from '@material-ui/icons/ImportExport';
 
 import { Profile, SidebarNav, UpgradePlan } from './components';
 
@@ -64,6 +65,11 @@ const Sidebar = props => {
       icon: <AccountBoxIcon />
     },
     {
+      title: 'Export',
+      href: '/export',
+      icon: <ImportExport />
+    },
+    {
       title: 'Settings',
       href: '/settings',
       icon: <SettingsIcon />
@@ -76,18 +82,11 @@ const Sidebar = props => {
       classes={{ paper: classes.drawer }}
       onClose={onClose}
       open={open}
-      variant={variant}
-    >
-      <div
-        {...rest}
-        className={clsx(classes.root, className)}
-      >
+      variant={variant}>
+      <div {...rest} className={clsx(classes.root, className)}>
         <Profile />
         <Divider className={classes.divider} />
-        <SidebarNav
-          className={classes.nav}
-          pages={pages}
-        />
+        <SidebarNav className={classes.nav} pages={pages} />
         <UpgradePlan />
       </div>
     </Drawer>
