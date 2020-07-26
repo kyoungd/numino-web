@@ -47,6 +47,7 @@ const AccountDetails = props => {
 
   const [companyName, setCompanyName] = useState('');
   const [page, setPage] = useState(1);
+  const [groupId, setGroupId] = useState(0);
 
   const [addresses, setAddresses] = useState([]);
 
@@ -59,14 +60,11 @@ const AccountDetails = props => {
 
   const onSubmit = e => {
     e.preventDefault();
-    console.log(values);
-    if (page) updateAddress();
-    else
+    if (addresses.length === 0)
       axios
         .post(serverUrl + 'seller-addresses', {
           companyName,
           location: [
-            ...addresses,
             {
               ...values,
               lng: 0,
@@ -76,25 +74,46 @@ const AccountDetails = props => {
           ]
         })
         .then(res => {
+          alert.show('Saved successfully', {
+            type: 'success'
+          });
           console.log(res.data);
         });
+    else updateAddress();
   };
 
   const updateAddress = () => {
     let temp = [...addresses];
-    temp[page - 1] = { ...values };
-    setAddresses([...temp]);
+    if (page) {
+      temp[page - 1] = { ...values };
+      setAddresses([...temp]);
+    } else {
+      temp.push({
+        ...values,
+        lng: 0,
+        lat: 0,
+        externalId: 0
+      });
+    }
 
     axios
-      .put(`${serverUrl}seller-addresses/${page - 1}`, {
+      .put(`${serverUrl}seller-addresses/${groupId}`, {
         companyName,
         location: [...temp]
       })
       .then(res => {
         setAddresses(res.data.location);
         setCompanyName(res.data.companyName);
+        setGroupId(res.data.id);
+        if (!page) setPage(res.data.location.length);
+        alert.show('Saved successfully', {
+          type: 'success'
+        });
       })
       .catch(err => {
+        alert.show('Something went wrong', {
+          type: 'error'
+        });
         console.log(err.response);
       });
   };
@@ -108,14 +127,27 @@ const AccountDetails = props => {
 
   useEffect(() => {
     axios.get(serverUrl + 'seller-addresses').then(res => {
-      setAddresses(res.data[0].location);
-      setCompanyName(res.data[0].companyName);
+      if (res.data.length > 0) {
+        console.log(res.data);
+        let temp = [];
+        res.data[0].location.map(loc => {
+          temp.push({
+            name: loc.name,
+            address1: loc.address1,
+            city: loc.city,
+            state: loc.state,
+            postalCode: loc.postalCode,
+            lng: loc.lng,
+            lat: loc.lat,
+            externalId: loc.externalId
+          });
+        });
+        setAddresses([...temp]);
+        setCompanyName(res.data[0].companyName);
+        setGroupId(res.data[0].id);
+      }
     });
   }, []);
-
-  const deleteAddress = () => {
-    //  setBanks();
-  };
 
   return (
     <>
@@ -138,6 +170,20 @@ const AccountDetails = props => {
           <Divider />
           <CardContent>
             <Grid container spacing={3}>
+              {addresses.length === 0 && (
+                <Grid item md={12}>
+                  <TextField
+                    fullWidth
+                    label="Company Name"
+                    margin="dense"
+                    name="companyName"
+                    onChange={e => setCompanyName(e.target.value)}
+                    required
+                    value={companyName}
+                    variant="outlined"
+                  />
+                </Grid>
+              )}
               <Grid item md={12}>
                 <TextField
                   fullWidth
@@ -150,7 +196,7 @@ const AccountDetails = props => {
                   variant="outlined"
                 />
               </Grid>
-              <Grid item md={8}>
+              <Grid item md={12}>
                 <TextField
                   fullWidth
                   label="Address"
@@ -159,19 +205,6 @@ const AccountDetails = props => {
                   onChange={handleChange}
                   required
                   value={values.address1}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item md={4} xs={12}>
-                <TextField
-                  fullWidth
-                  label="Postal Code"
-                  margin="dense"
-                  name="postalCode"
-                  onChange={handleChange}
-                  required
-                  type="number"
-                  value={values.postalCode}
                   variant="outlined"
                 />
               </Grid>
@@ -200,22 +233,25 @@ const AccountDetails = props => {
                   variant="outlined"
                 />
               </Grid>
+              <Grid item md={12}>
+                <TextField
+                  fullWidth
+                  label="Postal Code"
+                  margin="dense"
+                  name="postalCode"
+                  onChange={handleChange}
+                  required
+                  type="number"
+                  value={values.postalCode}
+                  variant="outlined"
+                />
+              </Grid>
             </Grid>
           </CardContent>
           <Divider />
-          <CardActions
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between'
-            }}>
+          <CardActions style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button color="primary" type="submit" variant="contained">
               Save Address
-            </Button>
-            <Button
-              style={{ backgroundColor: '#901c1c', color: 'white' }}
-              variant="contained"
-              onClick={deleteAddress}>
-              Delete
             </Button>
           </CardActions>
           <Divider />

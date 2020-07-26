@@ -54,9 +54,7 @@ const AccountProfile = props => {
   const [values, setValues] = useState({
     startDate: '',
     endDate: '',
-    format: '',
-    email: '',
-    limit: 0
+    format: 'json'
   });
 
   const handleChange = event => {
@@ -73,9 +71,7 @@ const AccountProfile = props => {
         params: {
           salesDate_gte: values.startDate,
           _sort: 'salesDate',
-          salesDate_lt: values.endDate,
-          _limit: values.limit ? values.limit : 0
-          // email: values.email
+          salesDate_lt: values.endDate
         }
       })
       .then(res => {
@@ -128,7 +124,7 @@ const AccountProfile = props => {
               />
             </Grid>
 
-            <Grid item md={6} xl={3}>
+            <Grid item md={12} xl={6}>
               <FormControl className={classes.formControl} fullWidth>
                 <InputLabel id="demo-simple-select-label">Format</InputLabel>
                 <Select
@@ -143,36 +139,10 @@ const AccountProfile = props => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item md={6} xl={9}>
-              <TextField
-                fullWidth
-                label="Limit"
-                margin="dense"
-                name="limit"
-                onChange={handleChange}
-                // required
-                type="number"
-                value={values.limit}
-                required
-                // variant="outlined"
-              />
-              {/* <TextField
-                fullWidth
-                label="Email"
-                margin="dense"
-                name="email"
-                onChange={handleChange}
-                // required
-                type="email"
-                value={values.email}
-                required
-                // variant="outlined"
-              /> */}
-            </Grid>
           </Grid>
         </CardContent>
         <Divider />
-        <CardActions>
+        <CardActions style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button color="primary" type="submit" variant="contained">
             Export
           </Button>

@@ -20,6 +20,7 @@ import {
   TableSortLabel,
   TablePagination
 } from '@material-ui/core';
+import Pagination from '@material-ui/lab/Pagination';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import axios from 'axios';
 import { serverUrl } from '../../../../helpers';
@@ -54,6 +55,7 @@ const statusColors = {
 const LatestOrders = props => {
   const { className, ...rest } = props;
   const [orders, setOrders] = React.useState([]);
+  const [page, setPage] = useState(1);
   const classes = useStyles();
 
   React.useEffect(() => {
@@ -64,7 +66,7 @@ const LatestOrders = props => {
         params: {
           salesDate_gte: '2020-06-25',
           _sort: 'salesDate',
-          _limit: 10
+          _limit: 100
         }
       })
       .then(res => {
@@ -96,11 +98,10 @@ const LatestOrders = props => {
                   <TableCell>Seller</TableCell>
                   <TableCell>Date</TableCell>
                   <TableCell>Amount</TableCell>
-                  <TableCell>Status</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {orders.map(order => (
+                {orders.slice((page - 1) * 10, page * 10).map(order => (
                   <TableRow hover key={order.id}>
                     <TableCell>{order.id}</TableCell>
                     <TableCell>{order.buyerName}</TableCell>
@@ -109,16 +110,6 @@ const LatestOrders = props => {
                       {moment(order.createdA).format('DD/MM/YYYY')}
                     </TableCell>
                     <TableCell>${order.orderAmount}</TableCell>
-                    <TableCell>
-                      <div className={classes.statusContainer}>
-                        <StatusBullet
-                          className={classes.status}
-                          color={statusColors[order.status]}
-                          size="sm"
-                        />
-                        {order.status}
-                      </div>
-                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -128,9 +119,12 @@ const LatestOrders = props => {
       </CardContent>
       <Divider />
       <CardActions className={classes.actions}>
-        <Button color="primary" size="small" variant="text">
-          View all <ArrowRightIcon />
-        </Button>
+        <Pagination
+          count={orders.length / 10}
+          page={page}
+          onChange={(e, val) => setPage(val)}
+          color="primary"
+        />
       </CardActions>
     </Card>
   );
