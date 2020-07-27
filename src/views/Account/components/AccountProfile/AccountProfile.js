@@ -82,6 +82,7 @@ const AccountProfile = props => {
       setValues({
         ...banks[page - 1]
       });
+    if (banks.length === 0) setValues({ ...defaultVal });
   }, [page, banks]);
 
   const onSubmit = e => {
@@ -106,19 +107,31 @@ const AccountProfile = props => {
             type: 'success'
           });
         });
-    } else updateAddress();
+    } else updateAddress(false);
   };
 
-  const updateAddress = () => {
-    let temp = [...banks];
-    if (page) {
-      temp[page - 1] = { ...values };
-      setBanks([...temp]);
-    } else {
+  const updateAddress = deleteVal => {
+    let temp = [];
+    banks.map(bank => {
+      temp.push({
+        name: bank.name,
+        accountNumber: bank.accountNumber,
+        routingNumber: bank.routingNumber,
+        isActiveAccount: bank.isActiveAccount,
+        isValidAccount: bank.isValidAccount,
+        externalId: bank.externalId
+      });
+    });
+
+    if (deleteVal) temp.splice(page - 1, 1);
+    else if (!page) {
       temp.push({
         ...values,
         externalId: 'muriel-1100'
       });
+    } else {
+      temp[page - 1] = { ...values };
+      setBanks([...temp]);
     }
     axios
       .put(`${serverUrl}bank-accounts/${groupId}`, {
@@ -145,19 +158,8 @@ const AccountProfile = props => {
   useEffect(() => {
     axios.get(serverUrl + 'bank-accounts').then(res => {
       if (res.data.length > 0) {
-        let temp = [];
-        res.data[0].bank.map(bank => {
-          temp.push({
-            name: bank.name,
-            accountNumber: bank.accountNumber,
-            routingNumber: bank.routingNumber,
-            isActiveAccount: bank.isActiveAccount,
-            isValidAccount: bank.isValidAccount,
-            externalId: bank.externalId
-          });
-        });
         setDisplayName(res.data[0].displayName);
-        setBanks([...temp]);
+        setBanks([...res.data[0].bank]);
         setGroupId(res.data[0].id);
       }
     });
@@ -263,9 +265,20 @@ const AccountProfile = props => {
             </Grid>
           </CardContent>
           <Divider />
-          <CardActions style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <CardActions
+            style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button color="primary" type="submit" variant="contained">
               Save Bank
+            </Button>
+            <Button
+              style={{
+                backgroundColor: 'red',
+                color: 'white'
+              }}
+              type="button"
+              onClick={() => updateAddress(true)}
+              variant="contained">
+              Delete bank
             </Button>
           </CardActions>
           <Divider />

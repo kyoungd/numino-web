@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import Pagination from '@material-ui/lab/Pagination';
+import { useAlert } from 'react-alert';
 
 import {
   Card,
@@ -34,6 +35,7 @@ const defaultVal = {
 
 const AccountDetails = props => {
   const { className, ...rest } = props;
+  const alert = useAlert();
 
   const classes = useStyles();
 
@@ -79,22 +81,39 @@ const AccountDetails = props => {
           });
           console.log(res.data);
         });
-    else updateAddress();
+    else updateAddress(false);
   };
 
-  const updateAddress = () => {
-    let temp = [...addresses];
-    if (page) {
-      temp[page - 1] = { ...values };
-      setAddresses([...temp]);
-    } else {
+  const updateAddress = deleteAcc => {
+    let temp = [];
+
+    addresses.map((loc, index) => {
+      temp.push({
+        name: loc.name,
+        address1: loc.address1,
+        city: loc.city,
+        state: loc.state,
+        postalCode: loc.postalCode,
+        lng: loc.lng,
+        lat: loc.lat,
+        externalId: loc.externalId
+      });
+    });
+
+    if (deleteAcc) temp.splice(page - 1, 1);
+    else if (!page) {
       temp.push({
         ...values,
         lng: 0,
         lat: 0,
         externalId: 0
       });
+    } else {
+      temp[page - 1] = { ...values };
+      setAddresses([...temp]);
     }
+
+    console.log(temp);
 
     axios
       .put(`${serverUrl}seller-addresses/${groupId}`, {
@@ -123,26 +142,13 @@ const AccountDetails = props => {
       setValues({
         ...addresses[page - 1]
       });
+    if (addresses.length === 0) setValues({ ...defaultVal });
   }, [page, addresses]);
 
   useEffect(() => {
     axios.get(serverUrl + 'seller-addresses').then(res => {
       if (res.data.length > 0) {
-        console.log(res.data);
-        let temp = [];
-        res.data[0].location.map(loc => {
-          temp.push({
-            name: loc.name,
-            address1: loc.address1,
-            city: loc.city,
-            state: loc.state,
-            postalCode: loc.postalCode,
-            lng: loc.lng,
-            lat: loc.lat,
-            externalId: loc.externalId
-          });
-        });
-        setAddresses([...temp]);
+        setAddresses([...res.data[0].location]);
         setCompanyName(res.data[0].companyName);
         setGroupId(res.data[0].id);
       }
@@ -249,9 +255,20 @@ const AccountDetails = props => {
             </Grid>
           </CardContent>
           <Divider />
-          <CardActions style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <CardActions
+            style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button color="primary" type="submit" variant="contained">
               Save Address
+            </Button>
+            <Button
+              style={{
+                backgroundColor: 'red',
+                color: 'white'
+              }}
+              type="button"
+              onClick={() => updateAddress(true)}
+              variant="contained">
+              Delete Address
             </Button>
           </CardActions>
           <Divider />
@@ -261,7 +278,7 @@ const AccountDetails = props => {
         <div
           style={{
             display: 'flex',
-            justifyContent: 'flex-end',
+            justifyContent: 'space-end',
             margin: '15px 0'
           }}>
           <Pagination
