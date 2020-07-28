@@ -54,6 +54,7 @@ const AccountDetails = props => {
   const [groupId, setGroupId] = useState(0);
 
   const [addresses, setAddresses] = useState([]);
+  const [loading, setLoading] = useState('');
 
   const handleChange = event => {
     setValues({
@@ -64,6 +65,7 @@ const AccountDetails = props => {
 
   const onSubmit = e => {
     e.preventDefault();
+    setLoading('Saving');
     if (post)
       axios
         .post(serverUrl + 'seller-addresses', {
@@ -78,6 +80,7 @@ const AccountDetails = props => {
           ]
         })
         .then(res => {
+          setLoading('');
           alert.show('Saved successfully', {
             type: 'success'
           });
@@ -126,12 +129,15 @@ const AccountDetails = props => {
         setAddresses(res.data.location);
         setCompanyName(res.data.companyName);
         setGroupId(res.data.id);
-        if (!page) setPage(res.data.location.length);
+        if (deleteAcc) setPage(page - 1 ? page - 1 : 1);
+        else if (!page) setPage(res.data.location.length);
+        setLoading('');
         alert.show('Saved successfully', {
           type: 'success'
         });
       })
       .catch(err => {
+        setLoading('');
         alert.show('Something went wrong', {
           type: 'error'
         });
@@ -167,14 +173,19 @@ const AccountDetails = props => {
             subheader="The information can be edited"
             title="Addresses"
             action={
-              <IconButton
-                aria-label="add address"
-                onClick={() => {
-                  setValues({ ...defaultVal });
-                  setPage(0);
-                }}>
-                <AddCircle />
-              </IconButton>
+              page ? (
+                <IconButton
+                  aria-label="add address"
+                  disabled={loading}
+                  onClick={() => {
+                    setValues({ ...defaultVal });
+                    setPage(0);
+                  }}>
+                  <AddCircle />
+                </IconButton>
+              ) : (
+                <></>
+              )
             }
           />
           <Divider />
@@ -261,19 +272,41 @@ const AccountDetails = props => {
           <Divider />
           <CardActions
             style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button color="primary" type="submit" variant="contained">
-              Save Address
-            </Button>
             <Button
-              style={{
-                backgroundColor: 'red',
-                color: 'white'
-              }}
-              type="button"
-              onClick={() => updateAddress(true)}
+              color="primary"
+              disabled={loading}
+              type="submit"
               variant="contained">
-              Delete Address
+              {loading === 'saving' ? 'Saving' : 'Save Address'}
             </Button>
+            {page ? (
+              <Button
+                style={{
+                  backgroundColor: loading ? '#d44646' : 'red',
+                  color: 'white'
+                }}
+                disabled={loading}
+                type="button"
+                onClick={() => {
+                  setLoading('deleting');
+                  updateAddress(true);
+                }}
+                variant="contained">
+                {loading === 'deleting' ? 'Deleting' : 'Delete Address'}
+              </Button>
+            ) : (
+              <Button
+                style={{
+                  backgroundColor: '#c7c7c7',
+                  color: 'black'
+                }}
+                type="button"
+                onClick={() => setPage(1)}
+                disabled={loading}
+                variant="contained">
+                Cancel
+              </Button>
+            )}
           </CardActions>
           <Divider />
         </form>

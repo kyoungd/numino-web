@@ -71,6 +71,7 @@ const AccountProfile = props => {
   const [page, setPage] = useState(1);
   const [banks, setBanks] = useState([]);
   const [groupId, setGroupId] = useState(0);
+  const [loading, setLoading] = useState('');
 
   const handleChange = event => {
     setValues({
@@ -89,6 +90,7 @@ const AccountProfile = props => {
 
   const onSubmit = e => {
     e.preventDefault();
+    setLoading('Saving');
     if (post) {
       axios
         .post(serverUrl + 'bank-accounts', {
@@ -105,6 +107,7 @@ const AccountProfile = props => {
           setBanks({
             ...res.data
           });
+          setLoading('');
           alert.show('Saved successfully', {
             type: 'success'
           });
@@ -144,12 +147,15 @@ const AccountProfile = props => {
         setBanks(res.data.bank);
         setDisplayName(res.data.displayName);
         setGroupId(res.data.id);
-        if (!page) setPage(res.data.bank.length);
+        if (deleteVal) setPage(page - 1 ? page - 1 : 1);
+        else if (!page) setPage(res.data.bank.length);
+        setLoading('');
         alert.show('Saved successfully', {
           type: 'success'
         });
       })
       .catch(err => {
+        setLoading('');
         alert.show('Something went wrong', {
           type: 'error'
         });
@@ -176,14 +182,19 @@ const AccountProfile = props => {
             subheader="The information can be edited"
             title="Bank Account"
             action={
-              <IconButton
-                aria-label="add bank"
-                onClick={() => {
-                  setValues({ ...defaultVal });
-                  setPage(0);
-                }}>
-                <AddCircle />
-              </IconButton>
+              page ? (
+                <IconButton
+                  aria-label="add bank"
+                  disabled={loading}
+                  onClick={() => {
+                    setValues({ ...defaultVal });
+                    setPage(0);
+                  }}>
+                  <AddCircle />
+                </IconButton>
+              ) : (
+                <></>
+              )
             }
           />
           <Divider />
@@ -270,19 +281,41 @@ const AccountProfile = props => {
           <Divider />
           <CardActions
             style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button color="primary" type="submit" variant="contained">
-              Save Bank
-            </Button>
             <Button
-              style={{
-                backgroundColor: 'red',
-                color: 'white'
-              }}
-              type="button"
-              onClick={() => updateAddress(true)}
+              color="primary"
+              disabled={loading}
+              type="submit"
               variant="contained">
-              Delete bank
+              {loading === 'saving' ? 'Saving' : 'Save Bank'}
             </Button>
+            {page ? (
+              <Button
+                style={{
+                  backgroundColor: loading ? '#d44646' : 'red',
+                  color: 'white'
+                }}
+                type="button"
+                onClick={() => {
+                  setLoading('deleting');
+                  updateAddress(true);
+                }}
+                disabled={loading}
+                variant="contained">
+                {loading === 'deleting' ? 'Deleting' : 'Delete bank'}
+              </Button>
+            ) : (
+              <Button
+                style={{
+                  backgroundColor: '#c7c7c7',
+                  color: 'black'
+                }}
+                type="button"
+                onClick={() => setPage(1)}
+                disabled={loading}
+                variant="contained">
+                Cancel
+              </Button>
+            )}
           </CardActions>
           <Divider />
         </form>
