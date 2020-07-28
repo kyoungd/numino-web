@@ -47,6 +47,8 @@ const AccountDetails = props => {
     postalCode: ''
   });
 
+  const [post, setPost] = useState(true);
+
   const [companyName, setCompanyName] = useState('');
   const [page, setPage] = useState(1);
   const [groupId, setGroupId] = useState(0);
@@ -62,7 +64,7 @@ const AccountDetails = props => {
 
   const onSubmit = e => {
     e.preventDefault();
-    if (addresses.length === 0)
+    if (post)
       axios
         .post(serverUrl + 'seller-addresses', {
           companyName,
@@ -147,7 +149,9 @@ const AccountDetails = props => {
 
   useEffect(() => {
     axios.get(serverUrl + 'seller-addresses').then(res => {
+      console.log(res.data);
       if (res.data.length > 0) {
+        setPost(false);
         setAddresses([...res.data[0].location]);
         setCompanyName(res.data[0].companyName);
         setGroupId(res.data[0].id);

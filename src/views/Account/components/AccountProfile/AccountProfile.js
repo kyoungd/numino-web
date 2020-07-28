@@ -65,6 +65,8 @@ const AccountProfile = props => {
 
   const [values, setValues] = useState({ ...defaultVal });
 
+  const [post, setPost] = useState(true);
+
   const [displayName, setDisplayName] = useState('');
   const [page, setPage] = useState(1);
   const [banks, setBanks] = useState([]);
@@ -87,7 +89,7 @@ const AccountProfile = props => {
 
   const onSubmit = e => {
     e.preventDefault();
-    if (banks.length === 0) {
+    if (post) {
       axios
         .post(serverUrl + 'bank-accounts', {
           displayName,
@@ -158,6 +160,7 @@ const AccountProfile = props => {
   useEffect(() => {
     axios.get(serverUrl + 'bank-accounts').then(res => {
       if (res.data.length > 0) {
+        setPost(false);
         setDisplayName(res.data[0].displayName);
         setBanks([...res.data[0].bank]);
         setGroupId(res.data[0].id);
